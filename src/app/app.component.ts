@@ -1,21 +1,22 @@
-import { Component } from '@angular/core';
-import { timer } from 'rxjs';
+import { Component } from "@angular/core";
+import { timer } from "rxjs";
+import { TimerService } from "./timer.service";
 // import { timer } from 'rxjs/observable/timer';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
 })
 export class AppComponent {
-  title = 'stopwatch'
+  title = "stopwatch";
   source;
   subscribe;
   hour = 0;
   min = 0;
   sec = 0;
   mis = 0;
-  constructor() {
+  constructor(private tService: TimerService) {
     /*
       timer takes a second argument, how often to emit subsequent values
       in this case we will emit first value after 1 second and subsequent
@@ -31,12 +32,11 @@ export class AppComponent {
       this.mis = val % 100;
 
       var new_sec = Math.floor(val / 100);
-     
-      var temp = Math.floor(new_sec / 60);
-      this.sec = (new_sec) % 60;
-      
-      if (temp == 0) {
 
+      var temp = Math.floor(new_sec / 60);
+      this.sec = new_sec % 60;
+
+      if (temp == 0) {
       } else if (temp < 60) {
         this.min = temp;
       } else if (temp >= 60) {
@@ -47,14 +47,27 @@ export class AppComponent {
     });
   }
   stop() {
-    console.log('hello');
+    console.log("hello");
     this.subscribe.unsubscribe();
   }
   clear() {
+    this.subscribe.unsubscribe();
+    
     this.mis = 0;
     this.sec = 0;
     this.min = 0;
     this.hour = 0;
   }
+  record() {
+    this.tService.subject.next(
+      "this click happened at: " +
+        this.hour +
+        ":" +
+        this.min +
+        ":" +
+        this.sec +
+        ":" +
+        this.mis
+    );
+  }
 }
-

@@ -16,6 +16,7 @@ export class AppComponent {
   min = 0;
   sec = 0;
   mis = 0;
+  count = 0;
   constructor(private tService: TimerService) {
     /*
       timer takes a second argument, how often to emit subsequent values
@@ -27,6 +28,12 @@ export class AppComponent {
   }
 
   //emit 0 after 1 second then complete, since no second argument is supplied
+  counter() {
+    this.count ++ ;
+    if (this.count == 1){
+      this.start();
+    }
+  }
   start() {
     this.subscribe = this.source.subscribe(val => {
       this.mis = val % 100;
@@ -49,10 +56,11 @@ export class AppComponent {
   stop() {
     console.log("hello");
     this.subscribe.unsubscribe();
+    this.count = 0;
   }
   clear() {
     this.subscribe.unsubscribe();
-    
+
     this.mis = 0;
     this.sec = 0;
     this.min = 0;
